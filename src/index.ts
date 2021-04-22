@@ -1,3 +1,9 @@
-export * from './lib/async';
-export * from './lib/hash';
-export * from './lib/number';
+// TODO: example of how lib should be exposed
+// export * from './lib/async';
+
+// Demo
+const demo = () => {
+  console.log('hello world!');
+}
+
+demo()
