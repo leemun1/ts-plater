@@ -1,4 +1,4 @@
-type BitmapPixel = 0 | 1;
+type BitmapPixel = 0 | 1 | 2;
 
 export class Bitmap {
   width: number;
