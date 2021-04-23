@@ -65,7 +65,7 @@ export class Bitmap {
     }
   }
 
-  trim(bmp: Bitmap): Bitmap {
+  static trim(bmp: Bitmap): Bitmap {
     let found = false;
     let minX = 0;
     let minY = 0;
@@ -103,7 +103,7 @@ export class Bitmap {
     return trimmed;
   }
 
-  rotate(other: Bitmap, r: number): Bitmap {
+  static rotate(other: Bitmap, r: number): Bitmap {
     const rot = -r;
 
     const w = other.width;
