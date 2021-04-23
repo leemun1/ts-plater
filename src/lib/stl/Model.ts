@@ -99,7 +99,7 @@ export class Model {
     return bitmap;
   }
 
-  translate(X: number, Y: number, Z: number) {
+  translate(X = 0, Y = 0, Z = 0) {
     const translated = new Model();
     translated.volumes = this.volumes;
 
