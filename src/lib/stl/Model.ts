@@ -78,8 +78,8 @@ export class Model {
     const yMin = minP.y - dilatation;
     const xMax = maxP.x + dilatation;
     const yMax = maxP.y + dilatation;
-    const width = (xMax - xMin) / precision;
-    const height = (yMax - yMin) / precision;
+    const width = Math.floor((xMax - xMin) / precision);
+    const height = Math.floor((yMax - yMin) / precision);
     const bitmap = new Bitmap(width, height);
 
     for (let x = 0; x < width; x++) {
