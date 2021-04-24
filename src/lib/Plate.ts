@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { Bitmap } from './Bitmap';
 import { PlacedPart } from './PlacedPart';
 import { Model } from './stl/Model';
@@ -15,6 +17,8 @@ export class Plate {
   precision: number;
   bmp: Bitmap;
   parts: PlacedPart[] = [];
+  // TODO: maybe replace use of this with a generic Map<K, V> with arbitrary key?
+  _uid = '';
 
   constructor(
     width: number,
@@ -28,6 +32,7 @@ export class Plate {
     this.diameter = diameter;
     this.mode = mode;
     this.precision = precision;
+    this._uid = uuidv4();
 
     if (mode == PLATE_MODE.CIRCLE) {
       this.width = height = diameter;
