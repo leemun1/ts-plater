@@ -135,6 +135,14 @@ export class Placer {
         plate.place(part);
         return true;
       } else {
+        if (plateCache) {
+          plateCache[cacheName] = true;
+        } else {
+          this.cache[plateUid] = {
+            [cacheName]: true,
+          };
+        }
+
         this.cache[plate._uid][cacheName] = true;
         return false;
       }
