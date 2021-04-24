@@ -56,7 +56,7 @@ export class Bitmap {
     if (
       !(!this.data || x < 0 || y < 0 || x >= this.width || y >= this.height)
     ) {
-      this.data[this.bmpPosition(x, y)] = 1;
+      this.data[this.bmpPosition(x, y)] = value;
       if (value) {
         this.sX += x;
         this.sY += y;
