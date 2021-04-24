@@ -31,19 +31,19 @@ export class Loader {
 
           // read vertices data
           const v0 = new Point3(
-            buffer.readFloatLE(12),
-            buffer.readFloatLE(16),
-            buffer.readFloatLE(20)
+            buffer.readFloatLE(12) * 1000,
+            buffer.readFloatLE(16) * 1000,
+            buffer.readFloatLE(20) * 1000
           );
           const v1 = new Point3(
-            buffer.readFloatLE(24),
-            buffer.readFloatLE(28),
-            buffer.readFloatLE(32)
+            buffer.readFloatLE(24) * 1000,
+            buffer.readFloatLE(28) * 1000,
+            buffer.readFloatLE(32) * 1000
           );
           const v2 = new Point3(
-            buffer.readFloatLE(36),
-            buffer.readFloatLE(40),
-            buffer.readFloatLE(44)
+            buffer.readFloatLE(36) * 1000,
+            buffer.readFloatLE(40) * 1000,
+            buffer.readFloatLE(44) * 1000
           );
 
           vol.addFace(new Face(v0, v1, v2));
