@@ -219,7 +219,7 @@ export class Request {
               }
             }
 
-            image.write('test.png', (err) => {
+            image.write('result.png', (err) => {
               if (err) throw err;
             });
           });
