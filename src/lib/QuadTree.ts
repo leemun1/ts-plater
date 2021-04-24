@@ -28,7 +28,10 @@ export class QuadTree {
   }
 
   add(t: Triangle) {
-    if (this.depth > 0 && !this.black) {
+    if (this.depth > 0) {
+      if (this.black) {
+        return;
+      }
       if (t.containsRectangle(this.r)) {
         this.black = true;
         this.quad1 = null;
