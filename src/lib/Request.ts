@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as readline from 'readline';
 
+import Jimp from 'jimp';
+
 import { Part } from './Part';
 import { Placer } from './Placer';
 import { Solution } from './Solution';
@@ -62,7 +64,6 @@ export class Request {
   async addPart(filepath: string, quantity: number, orientation: string) {
     if (!this.cancel && !this.hasError) {
       if (filepath != '' && quantity != 0) {
-        console.log('loading', filepath, quantity, orientation);
         this.parts[filepath] = new Part();
         const loaded = await this.parts[filepath].load(
           filepath,
@@ -89,28 +90,17 @@ export class Request {
     this.hasError = false;
 
     const input = fs.createReadStream(filepath);
+    const lineReader = readline.createInterface({ input });
 
-    return new Promise((resolve, reject) => {
-      const lineReader = readline.createInterface({ input });
-      input.on('end', () => {
-        console.log('end!');
-        resolve(true);
-      });
-      input.on('error', (err) => {
-        console.error('error!');
-        reject(err);
-      });
+    for await (const line of lineReader) {
+      const args = line.split(' ');
+      console.log('args:', args);
 
-      lineReader.on('line', async (line) => {
-        const args = line.split(' ');
-        console.log('args:', args);
-
-        const modelFilepath = args[0];
-        const quantity = +args[1];
-        const orientation = args[2];
-        await this.addPart(modelFilepath, quantity, orientation);
-      });
-    });
+      const modelFilepath = args[0];
+      const quantity = +args[1];
+      const orientation = args[2];
+      await this.addPart(modelFilepath, quantity, orientation);
+    }
   }
 
   process() {
@@ -123,9 +113,12 @@ export class Request {
       if (this.hasError) {
         console.log('cannot process');
       } else {
-        console.log('start processing');
         if (this.plateMode == PLATE_MODE.RECTANGLE) {
-          console.log('Plate size', this.plateWidth, this.plateHeight);
+          console.log(
+            `Plate size ${this.plateWidth / 1000} mm X ${
+              this.plateHeight / 1000
+            } mm`
+          );
         } else {
           console.log('Plate size (diameter)', this.plateDiameter);
         }
@@ -178,7 +171,6 @@ export class Request {
                 !this.solution ||
                 solutionTmp.score() < this.solution.score()
               ) {
-                console.log('Found solution', solutionTmp);
                 this.solution = solutionTmp;
               }
 
@@ -204,10 +196,34 @@ export class Request {
       }
     }
 
+    let image;
     if (this.solution) {
       for (let i = 0; i < this.solution!.countPlates(); i++) {
         const plate = this.solution!.getPlate(i);
         if (plate) {
+          image = new Jimp(300, 300, function (err, image) {
+            if (err) throw err;
+
+            let pixel;
+            let color;
+            for (let x = 0; x < plate.bmp.width; x++) {
+              for (let y = 0; y < plate.bmp.height; y++) {
+                pixel = plate.bmp.getPoint(x, y);
+                color = 0xffffffff;
+                if (pixel === 1) {
+                  color = Jimp.rgbaToInt(0, 255, 0, 255); // green
+                } else if (pixel === 2) {
+                  color = Jimp.rgbaToInt(255, 0, 0, 255); // red
+                }
+                image.setPixelColor(color, x, y);
+              }
+            }
+
+            image.write('test.png', (err) => {
+              if (err) throw err;
+            });
+          });
+
           for (const placedPart of plate.parts) {
             const part = placedPart.getPart();
             if (placedPart && part) {
@@ -215,6 +231,7 @@ export class Request {
               console.log('- center x', placedPart.getCenterX() / 1000);
               console.log('- center y', placedPart.getCenterY() / 1000);
               console.log(
+                '- rotation',
                 (placedPart.getRotation() * part.deltaR * 180) / Math.PI
               );
             }
@@ -222,5 +239,6 @@ export class Request {
         }
       }
     }
+    return image;
   }
 }
