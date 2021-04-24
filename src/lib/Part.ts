@@ -6,7 +6,7 @@ export class Part {
   filepath = '';
   bmp: (Bitmap | null)[] = [];
   model: Model | null = null;
-  num_bmps = 0;
+  numBitmaps = 0;
   precision = 0;
   deltaR = 0;
   surface = 0;
@@ -23,12 +23,12 @@ export class Part {
     this.precision = precision;
     this.filepath = filepath;
     this.deltaR = deltaR;
-    this.num_bmps = Math.ceil((Math.PI * 2) / this.deltaR);
+    this.numBitmaps = Math.ceil((Math.PI * 2) / this.deltaR);
 
     const loader = new Loader();
     const loadedModel = await loader.loadBinarySTL(filepath);
     this.model = loadedModel.putFaceOnPlate(orientation);
-    this.bmp = Array(this.num_bmps)
+    this.bmp = Array(this.numBitmaps)
       .fill(0)
       .map(() => new Bitmap(0, 0));
     this.bmp[0] = this.model.pixelize(this.precision, spacing);
@@ -41,14 +41,14 @@ export class Part {
     // const height = maxP.y - minP.y + 2 * spacing;
     let correct = 0;
 
-    for (let k = 0; k < this.num_bmps; k++) {
+    for (let k = 0; k < this.numBitmaps; k++) {
       if (k > 0) {
         const rotated = Bitmap.rotate(this.bmp[0], k * this.deltaR);
         this.bmp[k] = Bitmap.trim(rotated);
       }
     }
 
-    for (let k = 0; k < this.num_bmps; k++) {
+    for (let k = 0; k < this.numBitmaps; k++) {
       const currentBmp = this.bmp[k];
       if (currentBmp === null) continue;
 
