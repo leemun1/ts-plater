@@ -91,8 +91,9 @@ export class Placer {
 
   placePart(plate: Plate, part: PlacedPart) {
     const cacheName = part.getName();
-
-    if (!this.cache[plate._uid][cacheName]) {
+    const plateUid = plate._uid;
+    const plateCache = this.cache[plateUid];
+    if (!plateCache || plateCache[cacheName]) {
       let betterX = 0;
       let betterY = 0;
       let betterScore = 0;
