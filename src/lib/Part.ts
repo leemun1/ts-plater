@@ -34,6 +34,7 @@ export class Part {
     this.bmp[0] = this.model.pixelize(this.precision, spacing);
     this.surface = 0;
 
+    // TODO: remove if unnecessary
     // const minP = model.min();
     // const maxP = model.max();
     // const width = maxP.x - minP.x + 2 * spacing;

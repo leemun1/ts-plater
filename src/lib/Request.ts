@@ -123,6 +123,7 @@ export class Request {
       if (this.hasError) {
         console.log('cannot process');
       } else {
+        console.log('start processing');
         if (this.plateMode == PLATE_MODE.RECTANGLE) {
           console.log('Plate size', this.plateWidth, this.plateHeight);
         } else {
@@ -177,6 +178,7 @@ export class Request {
                 !this.solution ||
                 solutionTmp.score() < this.solution.score()
               ) {
+                console.log('Found solution', solutionTmp);
                 this.solution = solutionTmp;
               }
 
@@ -198,6 +200,25 @@ export class Request {
           console.log('Solution:');
           console.log('- Plates:', this.plates);
           console.log('- Score:', this.solution!.score());
+        }
+      }
+    }
+
+    if (this.solution) {
+      for (let i = 0; i < this.solution!.countPlates(); i++) {
+        const plate = this.solution!.getPlate(i);
+        if (plate) {
+          for (const placedPart of plate.parts) {
+            const part = placedPart.getPart();
+            if (placedPart && part) {
+              console.log('part name', placedPart.getName());
+              console.log('- center x', placedPart.getCenterX() / 1000);
+              console.log('- center y', placedPart.getCenterY() / 1000);
+              console.log(
+                (placedPart.getRotation() * part.deltaR * 180) / Math.PI
+              );
+            }
+          }
         }
       }
     }

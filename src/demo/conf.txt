@@ -1,0 +1,2 @@
+src/assets/teapot.stl 3 bottom
+src/assets/cube.stl 2 bottom
